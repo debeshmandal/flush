@@ -24,7 +24,8 @@ install:
   - conda activate test-environment
   - conda install pandas numpy scipy matplotlib pytest scikit-learn
   - conda activate test-environment
-  - export PYTHONPATH=$PYTHONPATH:~/
+  - python setup.py sdist bdist_wheel
+  - pip install dist/*.whl
 
 script: 
   - pytest
