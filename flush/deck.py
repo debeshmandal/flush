@@ -1,13 +1,16 @@
 import numpy as np
+import pandas as pd
+from typing import List
 
 class Card():
-    def __init__(self, number, suit):
-        self.number = number
+    def __init__(self, value, suit):
+        self.value = value
         self.suit = suit
 
 class CardContainer:
-    def __init__(self, cards):
-        pass
+    def __init__(self, cards : List[Card]):
+        self._cards = cards
+        self._cards_df = pd.DataFrame(cards, columns = ['value', 'suit'])
 
     @property
     def N(self):
@@ -19,19 +22,19 @@ class CardContainer:
 
     @property
     def clubs(self):
-        return
+        return self.suit('clubs')
 
     @property
     def spades(self):
-        return
+        return self.suit('spades')
 
     @property
     def hearts(self):
-        return
+        return self.suit('hearts')
 
     @property
     def diamonds(self):
-        return
+        return self.suit('diamonds')
 
     def suit(self, suit):
         return
@@ -45,7 +48,12 @@ class Hand(CardContainer):
 
 class Deck(CardContainer):
     def __init__(self):
-        pass
+        self._cards = Deck.generate()
+
+    @staticmethod
+    def generate():
+        cards = []
+        return cards
 
     def shuffle(self):
         self._cards.shuffle
