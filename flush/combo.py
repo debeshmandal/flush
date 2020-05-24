@@ -36,8 +36,9 @@ class HandAnalyser():
             if len(values) < 5:
                 return False
             _v = sorted([Registry().hierarchy[i] for i in sorted(values)])
-            if _v[-1] - _v[0] == 4:
-                return True
+            for i in range(0, len(values)-4):
+                if _v[i+4] - _v[i] == 4:
+                    return sorted(values)[i+4]
             else:
                 return False
         
@@ -51,7 +52,8 @@ class HandAnalyser():
                 reverse=True
             )
             if groups[0][1] >= 5:
-                return True
+                suit = groups[0][0]
+                return list(self.cards.suit(suit))
             else:
                 return False
         
@@ -76,11 +78,11 @@ class HandAnalyser():
 
         if straight:
             if flush:
-                scores['SF'] = int(HandAnalyser.binstr(self.values), 2)
+                scores['SF'] = int(HandAnalyser.binstr(flush), 2)
             else:
-                scores['ST'] = int(HandAnalyser.binstr(self.values), 2)
+                scores['ST'] = int(HandAnalyser.binstr(straight), 2)
         elif flush:
-            scores['FL'] = int(HandAnalyser.binstr(self.values), 2)
+            scores['FL'] = int(HandAnalyser.binstr(flush), 2)
 
         if len(scores.keys()) == 0:
             scores['NA'] = int(HandAnalyser.binstr(self.values), 2)

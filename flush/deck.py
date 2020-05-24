@@ -59,22 +59,22 @@ class CardContainer(list):
 
     @property
     def clubs(self):
-        return self.suit('clubs')
+        return self.suit('clubs').sum()
 
     @property
     def spades(self):
-        return self.suit('spades')
+        return self.suit('spades').sum()
 
     @property
     def hearts(self):
-        return self.suit('hearts')
+        return self.suit('hearts').sum()
 
     @property
     def diamonds(self):
-        return self.suit('diamonds')
+        return self.suit('diamonds').sum()
 
     def suit(self, suit):
-        return self.table['suit'].str.match(suit).sum()
+        return self.table[self.table['suit'].str.match(suit)]['value'].values
 
     def count(self, value):
         return self.table['value'].str.match(value).sum()
