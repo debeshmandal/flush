@@ -19,16 +19,16 @@ class HandAnalyser():
         def is_straight(values):
             if len(values) < 5:
                 return False
-            _v = [Registry().hierarchy(i) for i in sorted(values)]
+            _v = sorted([Registry().hierarchy[i] for i in sorted(values)])
             if _v[-1] - _v[0] == 4:
                 return True
             else:
                 return False
         
         def is_flush(suits):
-            if len(values) < 5:
+            if len(suits) < 5:
                 return False
-            groups = list(Counter(values).items())
+            groups = list(Counter(suits).items())
             groups = sorted(
                 groups,
                 key=lambda x: x[1],
@@ -38,41 +38,44 @@ class HandAnalyser():
                 return True
             else:
                 return False
-            
-        if groups(self.cards.values) != []: 
-            if groups[0][1] == 3:
-                if groups[1][1] == 2:
-                    val = 'FH'
+        
+        val = []
+        group = groups(self.values)
+        if group != []: 
+            if group[0][1] == 4:
+                val.append('4K')
+            if group[0][1] == 3:
+                if group[1][1] == 2:
+                    val.append('FH')
                 else:
-                    val = '3K'
-            elif groups[0][1] == 2:
-                if groups[1][1] == 2:
-                    val = '2P'
+                    val.append('3K')
+            elif group[0][1] == 2:
+                if group[1][1] == 2:
+                    val.append('2P')
                 else:
-                    val = '1P'
+                    val.append('1P')
                     
         straight = is_straight(self.values)
         flush = is_flush(self.suits)
 
         if straight:
             if flush:
-                val = 'SF'
+                val.append('SF')
             else:
-                val = 'ST'
+                val.append('ST')
         elif flush:
-            val = 'FL'
+            val.append('FL')
 
-        val = 'NA'
-        opts = []
-        return val, opts
-
-    @property
-    def kickers(self):
-        return 
+        val.append('NA')
+        val = sorted(
+            val,
+            key=lambda x: Registry()._combos[x])
+        return val[0]
 
     @property
     def values(self):
         return [i.value for i in self.cards]
 
+    @property
     def suits(self):
         return [i.suit for i in self.cards]
