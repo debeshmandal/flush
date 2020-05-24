@@ -1,9 +1,25 @@
 from collections import Counter
+
+import numpy as np
+
 from . import Registry
 
 class HandAnalyser():
     def __init__(self, cards):
         self.cards = cards
+        self._kind = self.kind
+        del self._kind
+
+    @staticmethod
+    def binstr(values):
+        string_list = np.zeros(13, dtype=np.int8)
+        for value in values:
+            index = Registry()._hierarchy[value]
+            string_list[index] += 1
+        string = ''.join(
+                [str(i) for i in reversed(string_list)]
+            )
+        return string
     
     @property
     def kind(self):
@@ -39,38 +55,40 @@ class HandAnalyser():
             else:
                 return False
         
-        val = []
+        scores = {}
         group = groups(self.values)
         if group != []: 
             if group[0][1] == 4:
-                val.append('4K')
+                scores['4K'] = int(HandAnalyser.binstr([group[0][0]]), 2)
             if group[0][1] == 3:
                 if group[1][1] == 2:
-                    val.append('FH')
+                    scores['FH'] = int(HandAnalyser.binstr([group[0][0], group[1][0]]), 2)
                 else:
-                    val.append('3K')
+                    scores['3K'] = int(HandAnalyser.binstr([group[0][0], group[1][0], group[2][0]]), 2)
             elif group[0][1] == 2:
                 if group[1][1] == 2:
-                    val.append('2P')
+                    scores['2P'] = int(HandAnalyser.binstr([group[0][0], group[1][0], group[2][0]]), 2)
                 else:
-                    val.append('1P')
+                    scores['1P'] = int(HandAnalyser.binstr([group[0][0], group[1][0], group[2][0], group[3][0]]), 2)
                     
         straight = is_straight(self.values)
         flush = is_flush(self.suits)
 
         if straight:
             if flush:
-                val.append('SF')
+                scores['SF'] = int(HandAnalyser.binstr(self.values), 2)
             else:
-                val.append('ST')
+                scores['ST'] = int(HandAnalyser.binstr(self.values), 2)
         elif flush:
-            val.append('FL')
+            scores['FL'] = int(HandAnalyser.binstr(self.values), 2)
 
-        val.append('NA')
+        if len(scores.keys()) == 0:
+            scores['NA'] = int(HandAnalyser.binstr(self.values), 2)
         val = sorted(
-            val,
-            key=lambda x: Registry()._combos[x])
-        return val[0]
+            scores.keys(),
+            key=lambda x: Registry().combos[x])[0]
+        self.opt = scores[val]
+        return val
 
     @property
     def values(self):

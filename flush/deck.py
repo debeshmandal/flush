@@ -85,8 +85,23 @@ class Hand(CardContainer):
         CardContainer.__init__(self, cards)
 
     @property
+    def analyser(self):
+        return HandAnalyser(self)
+
+    @property
+    def kind(self):
+        return self.analyser.kind
+
+    @property
+    def opt(self):
+        return self.analyser.opt
+
+    @property
     def score(self):
-        return HandAnalyser(self).score
+        kind_score = Registry().combos[self.kind]
+        opt_score = self.opt / 1E-9
+        score = kind_score + opt_score
+        return score
 
     def __ge__(self, other):
         return self.score >= other.score 

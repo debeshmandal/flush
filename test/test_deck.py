@@ -37,6 +37,31 @@ def test_deck():
     assert isinstance(deck.Deck(), list)
     assert deck.Deck()[0] == deck.Card('A', 'hearts')
 
+def test_hands():
+    highest = deck.Hand([
+            deck.Card('A', 'spades'),
+            deck.Card('K', 'spades'),
+            deck.Card('Q', 'spades'),
+            deck.Card('J', 'spades'),
+            deck.Card('10', 'spades')
+        ])
+    mid = deck.Hand([
+            deck.Card('A', 'spades'),
+            deck.Card('A', 'clubs'),
+            deck.Card('Q', 'spades'),
+            deck.Card('Q', 'diamonds'),
+            deck.Card('8', 'spades')
+        ])
+    lowest = deck.Hand([
+            deck.Card('A', 'spades'),
+            deck.Card('5', 'clubs'),
+            deck.Card('Q', 'spades'),
+            deck.Card('2', 'spades'),
+            deck.Card('8', 'spades')
+        ])
+    sorted([mid, lowest, highest])[0].kind == 'SF'
+
 if __name__ == '__main__':
     test_cards()
     test_deck()
+    test_hands()

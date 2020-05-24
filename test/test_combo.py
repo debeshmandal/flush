@@ -1,7 +1,7 @@
 import flush.combo as combo
 from flush.deck import Card
 
-def test_analyser():
+def test_analyser_simple():
 
     def royal():
         cards = [
@@ -105,5 +105,52 @@ def test_analyser():
     one()
     none()
 
+def test_analyser_competing():
+    def straight_flush():
+        royal = combo.HandAnalyser([
+            Card('A', 'spades'),
+            Card('K', 'spades'),
+            Card('Q', 'spades'),
+            Card('J', 'spades'),
+            Card('10', 'spades')
+        ])
+    
+        straight_flush = combo.HandAnalyser([
+            Card('10', 'spades'),
+            Card('9', 'spades'),
+            Card('8', 'spades'),
+            Card('7', 'spades'),
+            Card('6', 'spades')
+        ])
+
+        assert royal.kind == 'SF'
+        assert royal.kind == straight_flush.kind
+        assert royal.opt > straight_flush.opt
+
+    def flush():
+        high = combo.HandAnalyser([
+            Card('A', 'spades'),
+            Card('K', 'spades'),
+            Card('Q', 'spades'),
+            Card('J', 'spades'),
+            Card('9', 'spades')
+        ])
+    
+        low = combo.HandAnalyser([
+            Card('10', 'spades'),
+            Card('9', 'spades'),
+            Card('8', 'spades'),
+            Card('5', 'spades'),
+            Card('6', 'spades')
+        ])
+
+        assert high.kind == 'FL'
+        assert high.kind == low.kind
+        assert high.opt > low.opt
+
+    straight_flush()
+    flush()
+
+
 if __name__ == "__main__":
-    test_analyser()
+    test_analyser_simple()

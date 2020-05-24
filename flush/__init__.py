@@ -38,3 +38,11 @@ class Registry():
     @hierarchy.getter
     def hierarchy(self):
         return self._hierarchy
+
+    @property
+    def combos(self):
+        return self._combos
+
+    @combos.getter
+    def combos(self):
+        return self._combos
