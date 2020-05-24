@@ -1,36 +1,8 @@
 import numpy as np
 import pandas as pd
 from typing import List
-
-class Registry():
-    def __init__(self):
-        self._values = ['A', 'K', 'Q', 'J'] + [str(10-i) for i in range(9)]
-        self._suits = ['hearts', 'spades', 'clubs', 'diamonds']
-        self._hierarchy = dict(zip(self._values, reversed(range(13))))
-
-    @property
-    def values(self):
-        return self._values
-
-    @values.getter
-    def values(self):
-        return self._values
-    
-    @property
-    def suits(self):
-        return self._suits
-    
-    @suits.getter
-    def suits(self):
-        return self._suits
-
-    @property
-    def hierarchy(self):
-        return self._hierarchy
-
-    @hierarchy.getter
-    def hierarchy(self):
-        return self._hierarchy
+from .combo import HandAnalyser
+from . import Registry
 
 class Card():
     def __init__(self, value, suit=None):
@@ -63,7 +35,7 @@ class Card():
         return self.hierarchy == other.hierarchy
 
     def __repr__(self):
-        _suit = '_' if self.suit == None else self.suit
+        _suit = '_' if self.suit == None else self.suit[0]
         return f"{self.value}{_suit}"
 
 class CardContainer(list):
@@ -108,8 +80,31 @@ class CardContainer(list):
         return self.table['value'].str.match(value).sum()
 
 class Hand(CardContainer):
-    def __init__(self):
-        CardContainer.__init__(self, [])
+
+    def __init__(self, cards):
+        CardContainer.__init__(self, cards)
+
+    @property
+    def score(self):
+        return HandAnalyser(self).score
+
+    def __ge__(self, other):
+        return self.score >= other.score 
+
+    def __ne__(self, other):
+        return self.score != other.score
+
+    def __lt__(self, other):
+        return self.score < other.score
+
+    def __gt__(self, other):
+        return self.score > other.score
+
+    def __le__(self, other):
+        return self.score <= other.score
+
+    def __eq__(self, other):
+        return self.score == other.score
 
 class Deck(CardContainer):
     def __init__(self, shuffle=False):

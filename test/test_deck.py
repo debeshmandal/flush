@@ -1,15 +1,5 @@
 import flush.deck as deck
 
-def test_registry():
-    values = deck.Registry().values
-    suits = deck.Registry().suits
-    hierarchy = deck.Registry().hierarchy
-    assert 'hearts' in suits
-    assert 'spades' in suits
-    assert 'clubs' in suits
-    assert 'diamonds' in suits
-    assert hierarchy['A'] > hierarchy['J']
-
 def test_cards():
     deck.Card('A', 'spades')
 
@@ -48,6 +38,5 @@ def test_deck():
     assert deck.Deck()[0] == deck.Card('A', 'hearts')
 
 if __name__ == '__main__':
-    test_registry()
     test_cards()
     test_deck()
